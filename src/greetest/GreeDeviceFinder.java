@@ -22,7 +22,7 @@ public class GreeDeviceFinder {
     protected InetAddress mIPAddress = null;
     protected HashMap<String,GreeDevice> mDevicesHashMap = new HashMap<>();
     
-    public GreeDeviceFinder() throws UnknownHostException
+    public GreeDeviceFinder(InetAddress broadcastAddress) throws UnknownHostException
     {
         mIPAddress = InetAddress.getByName("192.168.1.255");
     }
@@ -47,15 +47,14 @@ public class GreeDeviceFinder {
         String address = remoteAddress.getHostAddress();
         int remotePort = receivePacket.getPort();
         String modifiedSentence = new String(receivePacket.getData());
-        System.out.println("FROM SERVER:" + modifiedSentence);
-        //byte[] modifiedSentenceArray = receivePacket.getData();
+        //System.out.println("FROM SERVER:" + modifiedSentence);
 
         // Read the response
         JSONObject  readScanDataPacketJson=new JSONObject(modifiedSentence);
         String pack = readScanDataPacketJson.getString("pack");
         String id = readScanDataPacketJson.getString("cid");
         String decryptedMsg = CryptoUtil.decryptPack(CryptoUtil.GetAESGeneralKeyByteArray(), pack);
-//        System.out.println("Result: " + decryptedMsg);
+        //  System.out.println("Result: " + decryptedMsg);
   
         // Create the JSON to hold the response values
         JSONObject  readPackDataPacketJson=new JSONObject(decryptedMsg);

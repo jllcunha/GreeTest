@@ -11,10 +11,7 @@ import javax.crypto.spec.SecretKeySpec;
 import sun.misc.BASE64Decoder;
 import sun.misc.BASE64Encoder;
 
-/**
- *
- * @author John
- */
+
 public class CryptoUtil {
     static String AES_General_Key = "a3K8Bx%2r8Y7#xDh";
     

@@ -34,7 +34,6 @@ public class GreeProtocolUtils {
         
         // Now Encrypt the Binding Request pack
         String encryptedBindReqPacket = CryptoUtil.encryptPack(CryptoUtil.GetAESGeneralKeyByteArray(), sendBindRequestPacket.toString());
-        //String unencryptedBindReqPacket = CryptoUtil.decryptPack(CryptoUtil.GetAESGeneralKeyByteArray(), encryptedBindReqPacket);
         JSONObject sendBindRequest = new JSONObject();
         sendBindRequest.put("cid", "app");
         sendBindRequest.put("i", 1);
@@ -45,24 +44,6 @@ public class GreeProtocolUtils {
         return bindReqStr.getBytes();
 
     }
-
-    public byte[] CreateDeviceRequest(byte[] encryptedPack, int i)
-    {
-        return null;
-    }
-
-    byte[] CreateDeviceStatusRequestPack(String id)
-    {
-        return null;
-    }
-
-    boolean ReadPackFromResponse(byte[] response,
-                             String decryptionKey,
-                             JSONObject pack)
-    {
-        return false;
-    }
-
 
     byte[] createDeviceCommandRequest(GreeDevice device, HashMap<String,Integer> parameters) throws Exception
     {
@@ -76,9 +57,7 @@ public class GreeProtocolUtils {
         Integer[] valueArray = parameters.values().toArray(new Integer[0]);
         
         // Out the command values into the Packet
-        //commandRequestPacket.put("opt", "Pow");
         commandRequestPacket.put("opt", new JSONArray(keyArray));
-        //commandRequestPacket.put("p", 1);
         commandRequestPacket.put("p", new JSONArray(valueArray));
         commandRequestPacket.put("t", "cmd");
         

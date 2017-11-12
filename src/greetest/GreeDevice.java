@@ -89,15 +89,14 @@ public class GreeDevice {
         DatagramPacket receivePacket = new DatagramPacket(receiveData, receiveData.length);
         clientSocket.receive(receivePacket);
         String modifiedSentence = new String(receivePacket.getData());
-        System.out.println("FROM SERVER:" + modifiedSentence);
-        //byte[] modifiedSentenceArray = receivePacket.getData();
+        //System.out.println("FROM SERVER:" + modifiedSentence);
 
         // Read the response
         JSONObject  readScanDataPacketJson=new JSONObject(modifiedSentence);
         String pack = readScanDataPacketJson.getString("pack");
         String id = readScanDataPacketJson.getString("cid");
         String decryptedMsg = CryptoUtil.decryptPack(CryptoUtil.GetAESGeneralKeyByteArray(), pack);
-        System.out.println("Result: " + decryptedMsg);
+        //System.out.println("Result: " + decryptedMsg);
         JSONObject  bindResponsePacketJson = new JSONObject(decryptedMsg);
         String resp = bindResponsePacketJson.getString("t");
         String bindkey = bindResponsePacketJson.getString("key");
