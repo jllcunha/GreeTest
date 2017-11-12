@@ -51,6 +51,10 @@ public class GreeTest {
         
         Thread.sleep(20000);
         
+        // Get the status of the device.
+        airconDevice.getDeviceStatus(clientSocket);
+        
+        
         // Set the temperature to 20 degrees
         airconDevice.SetTemperature(clientSocket, 20);
         

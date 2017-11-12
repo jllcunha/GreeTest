@@ -133,9 +133,7 @@ public class GreeDevice {
         ExecuteCommand(clientSocket, parameters);
     }
    
-    
-    
-    
+      
     
     protected void ExecuteCommand(DatagramSocket clientSocket, HashMap<String,Integer> parameters) throws Exception
     {
@@ -154,6 +152,31 @@ public class GreeDevice {
         System.out.println("FROM SERVER:" + modifiedSentence);
         //byte[] modifiedSentenceArray = receivePacket.getData();
 
+        // Read the response
+        JSONObject  readScanDataPacketJson=new JSONObject(modifiedSentence);
+        String pack = readScanDataPacketJson.getString("pack");
+        String id = readScanDataPacketJson.getString("cid");
+        String decryptedMsg = CryptoUtil.decryptPack(this.getKey().getBytes(), pack);
+        System.out.println("Result: " + decryptedMsg);
+    }
+    
+    
+    protected void getDeviceStatus(DatagramSocket clientSocket) throws Exception
+    {
+        byte[] sendData = new byte[1024];
+        byte[] receiveData = new byte[1024];
+        
+        GreeProtocolUtils protocolUtils = new GreeProtocolUtils();
+        sendData = protocolUtils.createDeviceStatusRequest(this);
+        DatagramPacket sendPacket = new DatagramPacket(sendData, sendData.length, getAddress(), getPort());
+        clientSocket.send(sendPacket);
+        
+        // Recieve a response
+        DatagramPacket receivePacket = new DatagramPacket(receiveData, receiveData.length);
+        clientSocket.receive(receivePacket);
+        String modifiedSentence = new String(receivePacket.getData());
+        //System.out.println("FROM SERVER:" + modifiedSentence);
+        
         // Read the response
         JSONObject  readScanDataPacketJson=new JSONObject(modifiedSentence);
         String pack = readScanDataPacketJson.getString("pack");

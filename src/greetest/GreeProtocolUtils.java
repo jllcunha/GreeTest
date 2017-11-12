@@ -76,4 +76,50 @@ public class GreeProtocolUtils {
 
     }
 
+    
+    byte[] createDeviceStatusRequest(GreeDevice device) throws Exception
+    {
+        JSONObject statusRequestPacket = new JSONObject();
+        
+        JSONArray colsArray = new JSONArray();
+        colsArray.put("Pow");
+        colsArray.put("Mod");
+        colsArray.put("SetTem");
+        colsArray.put("WdSpd");
+        colsArray.put("Air");
+        colsArray.put("Blo");
+        colsArray.put("Health");
+        colsArray.put("SwhSlp");
+        colsArray.put("Lig");
+        colsArray.put("SwingLfRig");
+        colsArray.put("SwUpDn");
+        colsArray.put("Quiet");
+        colsArray.put("Tur");
+        colsArray.put("StHt");
+        colsArray.put("TemUn");
+        colsArray.put("HeatCoolType");
+        colsArray.put("TemRec");
+        colsArray.put("SvSt");
+        colsArray.put("NoiseSet");
+        
+           
+        // Out the command values into the Packet
+        statusRequestPacket.put("cols", colsArray);
+        statusRequestPacket.put("mac", device.getId());
+        statusRequestPacket.put("t", "status");
+        
+        
+        // Now Encrypt the Binding Request pack
+        String encryptedCommandReqPacket = CryptoUtil.encryptPack(device.getKey().getBytes(), statusRequestPacket.toString());
+        String unencryptedCommandReqPacket = CryptoUtil.decryptPack(device.getKey().getBytes(), encryptedCommandReqPacket);
+        JSONObject sendCommandRequest = new JSONObject();
+        sendCommandRequest.put("cid", "app");
+        sendCommandRequest.put("i", 0);
+        sendCommandRequest.put("t", "pack");
+        sendCommandRequest.put("uid", 0);
+        sendCommandRequest.put("pack", new String(encryptedCommandReqPacket.getBytes(), UTF8_CHARSET));
+        String commandReqStr = sendCommandRequest.toString();
+        return commandReqStr.getBytes();
+
+    }
 }
