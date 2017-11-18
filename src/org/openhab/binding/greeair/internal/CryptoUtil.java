@@ -3,13 +3,16 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package greetest;
+package org.openhab.binding.greeair.internal;
 
 import java.security.Key;
 import javax.crypto.Cipher;
 import javax.crypto.spec.SecretKeySpec;
-import sun.misc.BASE64Decoder;
-import sun.misc.BASE64Encoder;
+import java.util.Base64;
+import java.util.Base64.Encoder;
+import java.util.Base64.Decoder;
+//import sun.misc.BASE64Decoder;
+//import sun.misc.BASE64Encoder;
 
 
 public class CryptoUtil {
@@ -30,8 +33,11 @@ public class CryptoUtil {
         String descrytpedMessage = null;
         try {
             Key key = new SecretKeySpec(keyarray, "AES");
-            BASE64Decoder decoder = new BASE64Decoder();
-            byte[] imageByte = decoder.decodeBuffer(message);
+            //BASE64Decoder decoder = new BASE64Decoder();
+            Base64.Decoder decoder = Base64.getDecoder();
+            //Decoder decoder = new Decoder();
+            byte[] imageByte = decoder.decode(message);
+            //byte[] imageByte = decoder.decodeBuffer(message);
 
             Cipher aesCipher = Cipher.getInstance("AES");
             aesCipher.init(Cipher.DECRYPT_MODE, key);
@@ -49,6 +55,7 @@ public class CryptoUtil {
     public static String encryptPack(byte[] keyarray, String message) throws Exception 
     {
         String encrytpedMessage = null;
+        String oldencrytpedMessage = null;
         try {
             Key key = new SecretKeySpec(keyarray, "AES");
             Cipher aesCipher = Cipher.getInstance("AES");
@@ -56,9 +63,12 @@ public class CryptoUtil {
             byte[] bytePlainText = aesCipher.doFinal(message.getBytes());
             String newString = new String(bytePlainText);
 
-            BASE64Encoder encoder = new BASE64Encoder();
-            encrytpedMessage = encoder.encodeBuffer(bytePlainText);
-            encrytpedMessage = encrytpedMessage.substring(0, encrytpedMessage.length()-2);
+            Base64.Encoder newencoder = Base64.getEncoder();
+            //BASE64Encoder oldencoder = new BASE64Encoder();
+            //oldencrytpedMessage = oldencoder.encodeBuffer(bytePlainText);
+            //oldencrytpedMessage = oldencrytpedMessage.substring(0, oldencrytpedMessage.length()-2);
+            encrytpedMessage = new String(newencoder.encode(bytePlainText));
+            encrytpedMessage = encrytpedMessage.substring(0, encrytpedMessage.length());
         } 
         catch (Exception ex) {
             System.out.println(ex);

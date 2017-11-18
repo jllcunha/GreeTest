@@ -3,9 +3,14 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package greetest;
+package org.openhab.binding.greeair.internal;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.stream.JsonReader;
 import java.io.IOException;
+import java.io.Reader;
+import java.io.StringReader;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
@@ -14,7 +19,6 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
-import org.json.JSONObject;
 
 
 public class GreeDeviceFinder {
@@ -30,46 +34,47 @@ public class GreeDeviceFinder {
     public void Scan(DatagramSocket clientSocket) throws IOException, Exception
     {
         byte[] sendData = new byte[1024];
-        byte[] receiveData = new byte[347];
+        byte[] receiveData = new byte[1024];
         
         // Send the Scan message
-        GreeProtocolUtils protocolUtils = new GreeProtocolUtils();
-        sendData = protocolUtils.CreateScanRequest();
+        //GreeProtocolUtils protocolUtils = new GreeProtocolUtils();
+        //sendData = protocolUtils.CreateScanRequest();
+        GreeScanRequest4Gson scanGson = new GreeScanRequest4Gson();
+        scanGson.t="scan";
+        
+        GsonBuilder gsonBuilder = new GsonBuilder();  
+        gsonBuilder.setLenient();  
+        Gson gson = gsonBuilder.create();
+        String scanReq = gson.toJson(scanGson);
+        sendData = scanReq.getBytes();
+        
         DatagramPacket sendPacket = new DatagramPacket(sendData, sendData.length, mIPAddress, 7000);
         clientSocket.send(sendPacket);
         
         // Recieve a response
         DatagramPacket receivePacket = new DatagramPacket(receiveData, receiveData.length);
         clientSocket.receive(receivePacket);
-        
-        
         InetAddress remoteAddress = receivePacket.getAddress();
         String address = remoteAddress.getHostAddress();
         int remotePort = receivePacket.getPort();
-        String modifiedSentence = new String(receivePacket.getData());
-        //System.out.println("FROM SERVER:" + modifiedSentence);
-
+        
         // Read the response
-        JSONObject  readScanDataPacketJson=new JSONObject(modifiedSentence);
-        String pack = readScanDataPacketJson.getString("pack");
-        String id = readScanDataPacketJson.getString("cid");
-        String decryptedMsg = CryptoUtil.decryptPack(CryptoUtil.GetAESGeneralKeyByteArray(), pack);
-        //  System.out.println("Result: " + decryptedMsg);
+        String modifiedSentence = new String(receivePacket.getData());
+        StringReader stringReader = new StringReader(modifiedSentence);
+        GreeScanResponse4Gson scanResponseGson = gson.fromJson(new JsonReader(stringReader), GreeScanResponse4Gson.class);
+        scanResponseGson.decryptedPack = CryptoUtil.decryptPack(CryptoUtil.GetAESGeneralKeyByteArray(), scanResponseGson.pack);
+        String decryptedMsg = CryptoUtil.decryptPack(CryptoUtil.GetAESGeneralKeyByteArray(), scanResponseGson.pack);
   
         // Create the JSON to hold the response values
-        JSONObject  readPackDataPacketJson=new JSONObject(decryptedMsg);
-        String mac = readPackDataPacketJson.getString("mac");
-        String mid = readPackDataPacketJson.getString("mid");
-        String model = readPackDataPacketJson.getString("model");
-        String name = readPackDataPacketJson.getString("name");
-        String ver = readPackDataPacketJson.getString("ver");
-        
+        stringReader = new StringReader(decryptedMsg);
+        scanResponseGson.packJson = gson.fromJson(new JsonReader(stringReader), GreeScanReponsePack4Gson.class);
+
         // Create a new GreeDevice
         GreeDevice newDevice = new GreeDevice ();
-        newDevice.setId(mac);
         newDevice.setAddress(remoteAddress);
         newDevice.setPort(remotePort);
-        newDevice.setmName(name);
+        newDevice.setScanResponseGson(scanResponseGson);
+
         AddDevice(newDevice);
     }
     

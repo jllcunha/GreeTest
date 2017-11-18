@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package greetest;
+package org.openhab.binding.greeair.internal;
 
 import java.io.*;
 import java.net.*;
@@ -20,7 +20,6 @@ import javax.crypto.SecretKey;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 import sun.misc.BASE64Decoder;
-import org.json.JSONObject;
 import sun.misc.BASE64Encoder;
 import java.nio.charset.Charset;
 import java.util.HashMap;
@@ -35,6 +34,7 @@ public class GreeTest {
     public static void main(String[] args) throws Exception {
         // Create a socket to communicate over
         DatagramSocket clientSocket = new DatagramSocket();
+        
 
         // Scan for Gree Airconditioners
         GreeDeviceFinder deviceFinder = new GreeDeviceFinder(InetAddress.getByName("192.168.1.255"));
@@ -46,10 +46,11 @@ public class GreeTest {
         // Bind with the device
         airconDevice.BindWithDevice(clientSocket);
         
+       
         // Set Power On
-        airconDevice.SetPoweredOn(clientSocket, Boolean.TRUE);
+        airconDevice.SetDevicePower(clientSocket, 1);
         
-        Thread.sleep(20000);
+        Thread.sleep(5000);
         
         // Get the status of the device.
         airconDevice.getDeviceStatus(clientSocket);
@@ -61,7 +62,7 @@ public class GreeTest {
         Thread.sleep(5000);
         
         // Turn off the Air Condtioner
-        airconDevice.SetPoweredOn(clientSocket, Boolean.FALSE);
+        airconDevice.SetDevicePower(clientSocket, 0);
         
         // Close the socket.
         clientSocket.close();
