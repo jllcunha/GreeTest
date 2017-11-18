@@ -50,14 +50,19 @@ public class GreeTest {
         // Set Power On
         airconDevice.SetDevicePower(clientSocket, 1);
         
-        Thread.sleep(5000);
+        //Thread.sleep(5000);
         
         // Get the status of the device.
         airconDevice.getDeviceStatus(clientSocket);
+        PrintDeviceStatus( airconDevice);
+        
+        airconDevice.SetDeviceSwingVertical(clientSocket, 0); //Full Range swing
+        airconDevice.getDeviceStatus(clientSocket);
+        PrintDeviceStatus( airconDevice);
         
         
         // Set the temperature to 20 degrees
-        airconDevice.SetTemperature(clientSocket, 20);
+        //airconDevice.SetTemperature(clientSocket, 20);
         
         Thread.sleep(5000);
         
@@ -68,5 +73,16 @@ public class GreeTest {
         clientSocket.close();
     }
     
+    private static void PrintDeviceStatus(GreeDevice airconDevice)
+    {
+        GreeStatusResponsePack4Gson statuspack = airconDevice.getGreeStatusResponse4Gson().packJson;
+        int numberValues = statuspack.cols.length;
+        for (int n=0; n<numberValues; n++)
+        {
+            String output = statuspack.cols[n] + " = " + new Integer(statuspack.dat[n]).toString() + ", ";
+            System.out.print(output);
+        }
+        System.out.print("\n");
+    }
 
 }

@@ -167,9 +167,56 @@ public class GreeDevice {
     }
 
     public Integer GetDeviceMode() {
-        return GetIntStatusVal("Pow");
+        return GetIntStatusVal("Mod");
+    }
+    
+    public void SetDeviceSwingVertical(DatagramSocket clientSocket, Integer value) throws Exception {
+        // Only allow this to happen if this device has been bound and values are valid
+        // On;y values 0,1,2,3,4,5,6,10,11 allowed
+        if ((!Objects.equals(getIsBound(), Boolean.TRUE)) 
+                || (value.intValue() < 0 || value.intValue() > 11)
+                || (value.intValue() > 6 && value.intValue() < 10))
+        {
+            return;
+        }
+        // Set the values in the HashMap
+        HashMap<String, Integer> parameters = new HashMap<>();
+        parameters.put("SwUpDn", value);
+        ExecuteCommand(clientSocket, parameters);
     }
 
+    public Integer GetDeviceSwingVertical() {
+        return GetIntStatusVal("SwUpDn");
+    }
+    
+    public void SetDeviceWindspeed(DatagramSocket clientSocket, Integer value) throws Exception {
+        // Only allow this to happen if this device has been bound and values are valid
+        /* Possible values are :
+            0 : Auto
+            1 : Low
+            2 : Medium Low
+            3 : Medium
+            4 : Medium High
+            5 : High
+        */
+        if ((!Objects.equals(getIsBound(), Boolean.TRUE)) || (value.intValue() < 0 || value.intValue() > 5)) {
+            return;
+        }
+
+        // Set the values in the HashMap
+        HashMap<String, Integer> parameters = new HashMap<>();
+        parameters.put("WdSpd", value);
+        parameters.put("Quiet", 0);
+        parameters.put("Tur", 0);
+        parameters.put("NoiseSet", 0);
+        ExecuteCommand(clientSocket, parameters);
+    }
+
+    public Integer GetDeviceWindspeed() {
+        return GetIntStatusVal("WdSpd");
+    }
+
+    
     public void SetDeviceTurbo(DatagramSocket clientSocket, Integer value) throws Exception {
         // Only allow this to happen if this device has been bound and values are valid
         if ((!Objects.equals(getIsBound(), Boolean.TRUE)) || (value.intValue() < 0 || value.intValue() > 1)) {
@@ -186,6 +233,7 @@ public class GreeDevice {
         return GetIntStatusVal("Tur");
     }
 
+    
     public void SetDeviceLight(DatagramSocket clientSocket, Integer value) throws Exception {
         // Only allow this to happen if this device has been bound and values are valid
         if ((!Objects.equals(getIsBound(), Boolean.TRUE)) || (value.intValue() < 0 || value.intValue() > 1)) {
@@ -202,7 +250,8 @@ public class GreeDevice {
         return GetIntStatusVal("Lig");
     }
 
-    public void SetTemperature(DatagramSocket clientSocket, int temperature) throws Exception {
+    
+    public void SetDeviceTempSet(DatagramSocket clientSocket, Integer value) throws Exception {
         // Only allow this to happen if this device has been bound
         if (getIsBound() != Boolean.TRUE) {
             return;
@@ -211,11 +260,92 @@ public class GreeDevice {
         // Set the values in the HashMap
         HashMap<String, Integer> parameters = new HashMap<>();
         parameters.put("TemUn", new Integer(0));
-        parameters.put("SetTem", new Integer(temperature));
+        parameters.put("SetTem", value);
 
         ExecuteCommand(clientSocket, parameters);
     }
 
+    public Integer GetDeviceTempSet() {
+        return GetIntStatusVal("SetTem");
+    }
+
+        
+    public void SetDeviceAir(DatagramSocket clientSocket, Integer value) throws Exception {
+        // Only allow this to happen if this device has been bound
+        if (getIsBound() != Boolean.TRUE) {
+            return;
+        }
+
+        // Set the values in the HashMap
+        HashMap<String, Integer> parameters = new HashMap<>();
+        parameters.put("Air", value);
+
+        ExecuteCommand(clientSocket, parameters);
+    }
+
+    public Integer GetDeviceAir() {
+        return GetIntStatusVal("Air");
+    }
+    
+    public void SetDeviceDry(DatagramSocket clientSocket, Integer value) throws Exception {
+        // Only allow this to happen if this device has been bound
+        if (getIsBound() != Boolean.TRUE) {
+            return;
+        }
+
+        // Set the values in the HashMap
+        HashMap<String, Integer> parameters = new HashMap<>();
+        parameters.put("Blo", value);
+
+        ExecuteCommand(clientSocket, parameters);
+    }
+
+    public Integer GetDeviceDry() {
+        return GetIntStatusVal("Blo");
+    }
+    
+    
+    public void SetDeviceHealth(DatagramSocket clientSocket, Integer value) throws Exception {
+        // Only allow this to happen if this device has been bound
+        if (getIsBound() != Boolean.TRUE) {
+            return;
+        }
+
+        // Set the values in the HashMap
+        HashMap<String, Integer> parameters = new HashMap<>();
+        parameters.put("Health", value);
+
+        ExecuteCommand(clientSocket, parameters);
+    }
+
+    public Integer GetDeviceHealth() {
+        return GetIntStatusVal("Health");
+    }
+    
+    
+    public void SetDevicePwrSaving(DatagramSocket clientSocket, Integer value) throws Exception {
+        // Only allow this to happen if this device has been bound
+        if (getIsBound() != Boolean.TRUE) {
+            return;
+        }
+
+        // Set the values in the HashMap
+        HashMap<String, Integer> parameters = new HashMap<>();
+        parameters.put("SvSt", value);
+        parameters.put("WdSpd", new Integer(0));
+        parameters.put("Quiet", new Integer(0));
+        parameters.put("Tur", new Integer(0));
+        parameters.put("SwhSlp", new Integer(0));
+        parameters.put("SlpMod", new Integer(0));
+ 
+        ExecuteCommand(clientSocket, parameters);
+    }
+
+    public Integer GetDevicePwrSaving() {
+        return GetIntStatusVal("SvSt");
+    }
+    
+    
     public Integer GetIntStatusVal(String valueName) {
         /*
          * Note : Values can be:

@@ -3,9 +3,8 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/D:/Personal/GreeTest/src/org/openhab/binding/greeaircon/internal/GreeDevice.java</file>
-            <file>file:/D:/Personal/GreeTest/src/org/openhab/binding/greeaircon/internal/GreeTest.java</file>
-            <file>file:/D:/Personal/GreeTest/src/org/openhab/binding/greeaircon/internal/GreeDeviceFinder.java</file>
+            <file>file:/D:/Personal/GreeTest/src/org/openhab/binding/greeair/internal/GreeTest.java</file>
+            <file>file:/D:/Personal/GreeTest/src/org/openhab/binding/greeair/internal/GreeDevice.java</file>
         </group>
     </open-files>
 </project-private>
