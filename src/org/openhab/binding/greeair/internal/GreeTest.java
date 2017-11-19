@@ -32,8 +32,9 @@ public class GreeTest {
      * @param args the command line arguments
      */
     public static void main(String[] args) throws Exception {
-        // Create a socket to communicate over
+        // Create a socket to communicate over with a timeout of 5 seconds
         DatagramSocket clientSocket = new DatagramSocket();
+        clientSocket.setSoTimeout(60000);
         
 
         // Scan for Gree Airconditioners

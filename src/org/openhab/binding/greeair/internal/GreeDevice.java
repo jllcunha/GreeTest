@@ -137,6 +137,7 @@ public class GreeDevice {
         mKey = bindResponseGson.packJson.key;
         setIsBound(Boolean.TRUE);
     }
+    
 
     public void SetDevicePower(DatagramSocket clientSocket, Integer value) throws Exception {
         // Only allow this to happen if this device has been bound and values are valid
@@ -153,6 +154,7 @@ public class GreeDevice {
     public Integer GetDevicePower() {
         return GetIntStatusVal("Pow");
     }
+    
 
     public void SetDeviceMode(DatagramSocket clientSocket, Integer value) throws Exception {
         // Only allow this to happen if this device has been bound and values are valid
@@ -169,6 +171,7 @@ public class GreeDevice {
     public Integer GetDeviceMode() {
         return GetIntStatusVal("Mod");
     }
+    
     
     public void SetDeviceSwingVertical(DatagramSocket clientSocket, Integer value) throws Exception {
         // Only allow this to happen if this device has been bound and values are valid
@@ -188,6 +191,7 @@ public class GreeDevice {
     public Integer GetDeviceSwingVertical() {
         return GetIntStatusVal("SwUpDn");
     }
+    
     
     public void SetDeviceWindspeed(DatagramSocket clientSocket, Integer value) throws Exception {
         // Only allow this to happen if this device has been bound and values are valid
@@ -286,6 +290,7 @@ public class GreeDevice {
     public Integer GetDeviceAir() {
         return GetIntStatusVal("Air");
     }
+  
     
     public void SetDeviceDry(DatagramSocket clientSocket, Integer value) throws Exception {
         // Only allow this to happen if this device has been bound
